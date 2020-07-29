@@ -2,6 +2,6 @@
     "extends": ["prettier"],
     "plugins": ["prettier"],
     "rules": {
-        "prettier/pretier":["error"],
+        "prettier/pretier":["error"]
     }
 }
