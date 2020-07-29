@@ -7,12 +7,13 @@ import Button from '../Button';
 const App: FC = () => {
     const [cells, setCells] = useState(generateCells);
 
-    console.log(cells);
-    
 
     const renderCells = ():ReactNode => {
-        return cells.map((row, rowIndex) => row.map((col, colIndex) => <Button  key={`${rowIndex} - ${colIndex}`}/>))
-    }
+        return cells.map((row, rowIndex) => row.map((cell, colIndex) => (
+            <Button key={`${rowIndex}-${colIndex}`} state={cell.state} value={cell.value} row={rowIndex} col={colIndex} />
+          ))
+        );
+    };
 
     return (
         <div className="App">

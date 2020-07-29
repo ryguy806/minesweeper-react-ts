@@ -28,6 +28,7 @@
     width: 52px;
     height: 52px;
     @include borders(white, #7b7b7b);
+    @include buttons();
     display: flex;
     justify-content: center;
     align-self: center;
