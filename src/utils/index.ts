@@ -9,7 +9,7 @@ export const generateCells = (): Cell[][] => {
       for (let col = 0; col < MAX_COLS_EASY; col++) {
         cells[row].push({
           value: CellValue.NONE,
-          state: CellState.VISIBLE,
+          state: CellState.OPEN,
         });
       }
     }
