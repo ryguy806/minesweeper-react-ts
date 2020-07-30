@@ -17,12 +17,21 @@ const App: FC = () => {
 
     const handleCellClick = (rowParam: number, colParam: number) => (): void => {
         
+        let newCells = cells.slice();
+
         if(!live) {
+            let isABomb = newCells[rowParam][colParam].value === CellValue.BOMB;
+            while(isABomb) {
+                newCells = generateCells();
+                if(newCells[rowParam][colParam].value !== CellValue.BOMB){
+                    isABomb = false;
+                    break;
+                }
+            }
             setLive(true);
         }
 
-        const currentCell = cells[rowParam][colParam];
-        let newCells = cells.slice();
+        const currentCell = newCells[rowParam][colParam];
 
         if(currentCell.state === CellState.FLAGGED || currentCell.state === CellState.VISIBLE){
             return;
@@ -92,15 +101,12 @@ const App: FC = () => {
     };
 
     const handleFaceClick = (): void => {
-        if(!live) {
-            setLive(false);
-            setTimer(0);
-            setCells(generateCells());
-            setBombCount(NUMBER_OF_BOMBS_EASY);
-            setGameOver(false);
-            setWin(false);
-        }
-    };
+        setLive(false);
+        setTimer(0);
+        setCells(generateCells());
+        setGameOver(false);
+        setWin(false);
+      };
 
     useEffect(() => {
 
