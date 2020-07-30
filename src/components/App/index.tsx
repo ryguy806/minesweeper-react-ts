@@ -4,7 +4,7 @@ import NumberDisplay from '../NumberDisplay';
 import { generateCells, openMultipleCells } from '../../utils';
 import Button from '../Button';
 import { Face, Cell, CellState, CellValue } from '../../types';
-import { NUMBER_OF_BOMBS_EASY } from '../../constants';
+import { NUMBER_OF_BOMBS_EASY, MAX_ROWS_EASY, MAX_COLS_EASY } from '../../constants';
 
 const App: FC = () => {
     const [cells, setCells] = useState<Cell[][]>(generateCells);
@@ -12,11 +12,12 @@ const App: FC = () => {
     const [timer, setTimer] = useState<number>(0);
     const [live, setLive] = useState<boolean>(false);
     const [bombCount, setBombCount] = useState<number>(NUMBER_OF_BOMBS_EASY);
+    const [gameOver, setGameOver] = useState<boolean>(false);
+    const [win, setWin] = useState<boolean>(false);
 
     const handleCellClick = (rowParam: number, colParam: number) => (): void => {
         
         if(!live) {
-            //TODO: Make sure the first click is not a bomb!
             setLive(true);
         }
 
@@ -28,14 +29,43 @@ const App: FC = () => {
         }
 
         if(currentCell.value === CellValue.BOMB) {
-            //TODO: Handle bomb click!
+            setGameOver(true);
+            newCells[rowParam][colParam].red = true;
+            newCells = showAllBombs();
+            setCells(newCells);
+            return;
         } else if (currentCell.value === CellValue.NONE) {
             newCells = openMultipleCells(cells, rowParam, colParam);
-            setCells(newCells);
         } else {
             newCells[rowParam][colParam].state = CellState.VISIBLE;
             setCells(newCells);
         }
+
+        //Check to see if you have won
+        let safeOpenCellsExist = false;
+        for(let row = 0; row < MAX_ROWS_EASY; row++){
+            for(let col = 0; col < MAX_COLS_EASY; col++) {
+                const currentCell = newCells[row][col];
+                if(currentCell.value !== CellValue.BOMB && currentCell.state === CellState.OPEN){
+                    safeOpenCellsExist = true;
+                    break;
+                }
+            }
+        }
+
+        if(!safeOpenCellsExist) {
+            newCells = newCells.map(row => row.map(cell => {
+                if(cell.value === CellValue.BOMB) {
+                    return {
+                        ...cell,
+                        state: CellState.FLAGGED,
+                    }
+                }
+                return cell;
+            }))
+            setWin(true);
+        }
+        setCells(newCells);
     };
 
     const handleCellContext = (rowParam: number, colParam: number) => (e: MouseEvent<HTMLDivElement>): void => {
@@ -62,11 +92,13 @@ const App: FC = () => {
     };
 
     const handleFaceClick = (): void => {
-        if(live) {
+        if(!live) {
             setLive(false);
             setTimer(0);
             setCells(generateCells());
             setBombCount(NUMBER_OF_BOMBS_EASY);
+            setGameOver(false);
+            setWin(false);
         }
     };
 
@@ -99,6 +131,20 @@ const App: FC = () => {
         }
     } ,[live, timer]);
 
+    useEffect(() => {
+        if(gameOver) {
+            setFace(Face.lost);
+            setLive(false);
+        }
+    }, [gameOver]);
+
+    useEffect(() => {
+        if(win) {
+            setLive(false);
+            setFace(Face.win);
+        }
+    }, [win]);
+
     const renderCells = ():ReactNode => {
         return cells.map((row, rowIndex) => row.map((cell, colIndex) => (
             <Button 
@@ -106,10 +152,24 @@ const App: FC = () => {
             state={cell.state} value={cell.value}
             row={rowIndex}
             col={colIndex}
+            red={cell.red}
             onClick={handleCellClick}
             onContextClick = {handleCellContext}/>
           ))
         );
+    };
+
+    const showAllBombs = (): Cell[][]=> {
+        const currentCells = cells.slice();
+        return currentCells.map(row => row.map(cell => {
+            if (cell.value === CellValue.BOMB) {
+                return {
+                    ...cell,
+                    state: CellState.VISIBLE,
+                }
+            }
+            return cell;
+        }))
     };
 
     return (

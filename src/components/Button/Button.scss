@@ -12,62 +12,62 @@
     justify-content: center;
     cursor: pointer;
     font-weight: bold;
-  }
-  
-  .Button:active {
-    border-top-color: #7b7b7b;
-    border-left-color: #7b7b7b;
-    border-right-color: white;
-    border-bottom-color: white;
-  }
-  
-  .Button span {
-    display: block;
-    margin-left: 2px;
-    font-size: 12px;
-  }
-  
-  .Button.visible {
-    border-color: #7b7b7b;
-    border-width: 1px;
-  }
-  
-  .Button.red {
-    background: red;
-  }
-  
-  .Button.visible.value-0 {
-    background: #bdbdbd;
-  }
-  
-  .value-1 {
-    color: blue;
-  }
-  
-  .value-2 {
-    color: green;
-  }
-  
-  .value-3 {
-    color: red;
-  }
-  
-  .value-4 {
-    color: purple;
-  }
-  
-  .value-5 {
-    color: maroon;
-  }
-  
-  .value-6 {
-    color: turquoise;
-  }
-  
-  .value-7 {
-    color: black;
-  }
-  
-  .value-8 {
-    color: gray;
-  }
+
+    &:active {
+      border-top-color: #7b7b7b;
+      border-left-color: #7b7b7b;
+      border-right-color: white;
+      border-bottom-color: white;
+    }
+
+    span {
+      display: block;
+      margin-left: 2px;
+      font-size: 12px;
+    }
+    
+    &.visible {
+      border-color: #7b7b7b;
+      border-width: 1px;
+    }
+    
+    &.red {
+      background: red;
+    }
+    
+    &.visible.value-0 {
+      background: #bdbdbd;
+    }
+    
+    &.value-1 {
+      color: blue;
+    }
+    
+    &.value-2 {
+      color: green;
+    }
+    
+    &.value-3 {
+      color: red;
+    }
+    
+    &.value-4 {
+      color: purple;
+    }
+    
+    &.value-5 {
+      color: maroon;
+    }
+    
+    &.value-6 {
+      color: turquoise;
+    }
+    
+    &.value-7 {
+      color: black;
+    }
+    
+    &.value-8 {
+      color: gray;
+    }
+}
