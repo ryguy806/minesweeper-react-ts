@@ -1,9 +1,9 @@
 import React, {FC, useState, ReactNode, useEffect, MouseEvent} from 'react';
 import './App.scss';
 import NumberDisplay from '../NumberDisplay';
-import { generateCells } from '../../utils';
+import { generateCells, openMultipleCells } from '../../utils';
 import Button from '../Button';
-import { Face, Cell, CellState } from '../../types';
+import { Face, Cell, CellState, CellValue } from '../../types';
 import { NUMBER_OF_BOMBS_EASY } from '../../constants';
 
 const App: FC = () => {
@@ -16,7 +16,25 @@ const App: FC = () => {
     const handleCellClick = (rowParam: number, colParam: number) => (): void => {
         
         if(!live) {
+            //TODO: Make sure the first click is not a bomb!
             setLive(true);
+        }
+
+        const currentCell = cells[rowParam][colParam];
+        let newCells = cells.slice();
+
+        if(currentCell.state === CellState.FLAGGED || currentCell.state === CellState.VISIBLE){
+            return;
+        }
+
+        if(currentCell.value === CellValue.BOMB) {
+            //TODO: Handle bomb click!
+        } else if (currentCell.value === CellValue.NONE) {
+            newCells = openMultipleCells(cells, rowParam, colParam);
+            setCells(newCells);
+        } else {
+            newCells[rowParam][colParam].state = CellState.VISIBLE;
+            setCells(newCells);
         }
     };
 
